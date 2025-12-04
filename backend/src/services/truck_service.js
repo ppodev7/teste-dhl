@@ -1,17 +1,39 @@
-import { Truck } from '../models/Truck.js';
+import { Truck } from '../models/truck_models.js'; 
 
 export const createTruck = async (data) => {
-    return await Truck.create(data);
+
+  try {
+    // Tenta criar um novo documento 'Truck' no banco de dados com os dados fornecidos.
+    const newTruck = await Truck.create(data);
+    return newTruck;
+  } catch (error) {
+    throw error; // Delega o erro para ser tratado em controller.
+  }
 };
 
-export const listTrucks= async () => {
-    return await Truck.find();
+export const listTrucks = async () => {
+  try {
+    const allTrucks = await Truck.find();
+    return allTrucks;
+  } catch (error) {
+    throw error;  
+  }
 };
 
 export const updateTrucks = async (id, data) => {
-    return await Truck.findByIdAndUpdate(id, data, { new: true });
+  try {
+    const updatedTruck = await Truck.findByIdAndUpdate(id, data, { new: true }); // new: true - retorna os dados atualizados. 
+    return updatedTruck;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const deleteTrucks = async (id) => {
-    return await Truck.findByIdAndDelete(id);
+  try {
+    const deletedTruck = await Truck.findByIdAndDelete(id);
+    return deletedTruck;
+  } catch (error) {
+    throw error;
+  }
 };

@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 
-export const STATUS_CAMINHAO = {
+export const TRUCK_STATUS = {
   AGUARDANDO: "AGUARDANDO",
   NO_PATIO: "NO PÁTIO",
   FINALIZADO: "FINALIZADO",
 };
 
-const caminhaoSchema = new mongoose.Schema({
+const truckSchema = new mongoose.Schema({
   placa: {
     type: String,
     required: [true, "O campo 'placa' é obrigatório."],
@@ -45,8 +45,8 @@ const caminhaoSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: Object.values(STATUS_CAMINHAO),
-    default: STATUS_CAMINHAO.AGUARDANDO,
+    enum: Object.values(TRUCK_STATUS),
+    default: TRUCK_STATUS.AGUARDANDO,
   }
 },
   {
@@ -57,4 +57,4 @@ const caminhaoSchema = new mongoose.Schema({
   }
 );
 
-export const Truck = mongoose.model("Caminhao", caminhaoSchema);
+export const Truck = mongoose.model("Truck", truckSchema);

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"; 
 
 export const connectDB = async () => {
     try {
@@ -7,6 +7,6 @@ export const connectDB = async () => {
 
     } catch (error) {
         console.log("Erro ao conectar ao MongoDB", error);
-        process.exit(1);
+        process.exit(1); // Encerra a aplicação em caso de erro.
     }
 };
