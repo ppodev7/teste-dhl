@@ -57,4 +57,4 @@ const caminhaoSchema = new mongoose.Schema({
   }
 );
 
-export const Caminhao = mongoose.model("Caminhao", caminhaoSchema);
+export const Truck = mongoose.model("Caminhao", caminhaoSchema);
