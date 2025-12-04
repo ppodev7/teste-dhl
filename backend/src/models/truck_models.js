@@ -9,17 +9,28 @@ export const STATUS_CAMINHAO = {
 const caminhaoSchema = new mongoose.Schema({
   placa: {
     type: String,
-    required: true,
+    required: [true, "O campo 'placa' é obrigatório."],
+    unique: true,
+    trim: true,
   },
   
   motorista: {
     type: String,
-    required: true,
+    required: [true, "O campo 'motorista' é obrigatório."],
+    trim: true,
   },
+  
+  carga: {
+    type: String,
+    required: [true, "O campo 'carga' é obrigatório."],
+    trim: true,
+  },
+
   
   empresa: {
     type: String,
-    required: true,
+    required: [true, "O campo 'empresa' é obrigatório."],
+    trim: true,
   },
 
   horarioEntrada: {
@@ -28,7 +39,8 @@ const caminhaoSchema = new mongoose.Schema({
   },
 
   horarioSaida: {
-    type: Date
+    type: Date,
+    default: null,
   },
 
   status: {
@@ -36,14 +48,13 @@ const caminhaoSchema = new mongoose.Schema({
     enum: Object.values(STATUS_CAMINHAO),
     default: STATUS_CAMINHAO.AGUARDANDO,
   }
-
 },
-
-// Habilita a criação automática dos campos `createdAt` e `updatedAt (createdAT - Data e hora em que o campo foi criado, updateAT - Data e hora da última atualização do campo)
-{ timestamps: true }
-
+  {
+    // Opção que cria e gerencia automaticamente os campos:
+    // `createdAt`: Data e hora em que o documento foi criado.
+    // `updatedAt`: Data e hora da última atualização do documento.
+    timestamps: true
+  }
 );
 
 export const Caminhao = mongoose.model("Caminhao", caminhaoSchema);
-
-  
