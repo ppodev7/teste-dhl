@@ -11,9 +11,10 @@ export const createTruck = async (data) => {
   }
 };
 
-export const listTrucks = async () => {
+export const listTrucks = async (filters = {}) => {
   try {
-    const allTrucks = await Truck.find();
+    // O objeto 'filters' (vindo de req.query) é passado diretamente para o find().
+    const allTrucks = await Truck.find(filters);
     return allTrucks;
   } catch (error) {
     throw error;  
