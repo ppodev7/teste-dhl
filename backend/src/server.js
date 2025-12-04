@@ -6,8 +6,11 @@ import { connectDB } from "./config/database.js";
 
 const PORT = process.env.PORT || 3001;
 
-connectDB();
+const startServer = async () => {
+    await connectDB();
+    app.listen(PORT, () => {
+        console.log(`Servidor rodando na porta ${PORT}`);
+    });
+};
 
-app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-});
+startServer();
