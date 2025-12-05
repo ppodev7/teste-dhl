@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 export const TRUCK_STATUS = {
   AGUARDANDO: "AGUARDANDO",
-  NO_PATIO: "NO PÁTIO",
+  EM_TRANSITO: "EM_TRANSITO",
+  ENTREGUE: "ENTREGUE",
+  CANCELADO: "CANCELADO",
+  NO_PATIO: "NO_PATIO",
   FINALIZADO: "FINALIZADO",
 };
 
