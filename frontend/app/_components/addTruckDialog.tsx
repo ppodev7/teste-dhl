@@ -63,6 +63,9 @@ export function AddTruckDialog() {
                 <SelectContent>
                   <SelectItem value="AGUARDANDO">Aguardando</SelectItem>
                   <SelectItem value="NO_PATIO">No Pátio</SelectItem>
+                  <SelectItem value="EM_TRANSITO">Em Trânsito</SelectItem>
+                  <SelectItem value="ENTREGUE">Entregue</SelectItem>
+                  <SelectItem value="CANCELADO">Cancelado</SelectItem>
                   <SelectItem value="FINALIZADO">Finalizado</SelectItem>
                 </SelectContent>
             </Select>
