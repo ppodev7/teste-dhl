@@ -25,17 +25,21 @@ import {
 } from "@/components/ui/table";
 // Importa o ícone de reticências para o menu de ações.
 import { MoreHorizontal } from "lucide-react";
+import { AddTruckDialog } from "./addTruckDialog";
 
 export function Dashboard() {
   return (
     // Container principal para centralizar o card na página.
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <Card>
-        <CardHeader>
-          <CardTitle>Controle de Caminhões</CardTitle>
-          <CardDescription>
-            Gerencie os caminhões da sua frota.
-          </CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="grid gap-2">
+            <CardTitle>Controle de Caminhões</CardTitle>
+            <CardDescription>
+              Gerencie os caminhões da sua frota.
+            </CardDescription>
+          </div>
+          <AddTruckDialog />
         </CardHeader>
         <CardContent>
           <Table>
