@@ -33,6 +33,18 @@ const truckSchema = new mongoose.Schema({
     trim: true,
   },
 
+  origem: {
+    type: String,
+    required: [true, "O campo 'origem' é obrigatório."],
+    trim: true,
+  },
+
+  destino: {
+    type: String,
+    required: [true, "O campo 'destino' é obrigatório."],
+    trim: true,
+  },
+
   horarioEntrada: {
     type: Date,
     default: Date.now,
