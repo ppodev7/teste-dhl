@@ -11,6 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export function AddTruckDialog() {
   return (
@@ -45,6 +52,20 @@ export function AddTruckDialog() {
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="destino" className="text-right">Destino</Label>
             <Input id="destino" placeholder="Cidade, Estado" className="col-span-3" />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="status" className="text-right">Status</Label>
+            <Select>
+              <SelectTrigger className="col-span-3">
+                <SelectValue placeholder="Selecione o status" />
+              </SelectTrigger>
+              {/* Removi o Portal para garantir que o conteúdo do Select apareça sobre o Dialog */}
+                <SelectContent>
+                  <SelectItem value="AGUARDANDO">Aguardando</SelectItem>
+                  <SelectItem value="NO_PATIO">No Pátio</SelectItem>
+                  <SelectItem value="FINALIZADO">Finalizado</SelectItem>
+                </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="chegada" className="text-right">Chegada</Label>
