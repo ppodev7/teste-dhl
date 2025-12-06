@@ -1,36 +1,31 @@
-# Arquivo .gitignore para o monorepo
-# As regras aqui se aplicam a todas as subpastas (frontend, backend, etc.)
+# Dependências
+node_modules/
 
-### DEPENDÊNCIAS ###
-# Ignora as pastas de dependências em qualquer lugar do projeto
-**/node_modules
-/.pnp
-.pnp.*
-
-### SAÍDA DE BUILD (Build Output) ###
-# Ignora as pastas de build do Next.js (frontend) e TypeScript (backend)
-**/.next/
-**/out/
-**/build/
-**/dist/
-
-### LOGS ###
-# Ignora logs de debug de vários gerenciadores de pacotes
+# Logs
+*.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
 
-### ARQUIVOS DE AMBIENTE ###
-# Ignora arquivos de ambiente que contêm segredos e configurações locais
-# É uma boa prática nunca versionar esses arquivos
-**/.env
-**/.env.local
-**/.env.development
-**/.env.production
+# Ambiente
+.env
+.env.local
+.env.*.local
 
-### ARQUIVOS DE SISTEMA E DIVERSOS ###
-.DS_Store
-*.pem
-.vercel
+# Build do Next.js
+.next/
+out/
+
+# Cache
+.cache/
 *.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Debug
+*.log
+
