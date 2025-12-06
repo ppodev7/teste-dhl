@@ -1,18 +1,4 @@
 /**
- * types/truck.ts
- * 
- * O QUE FAZ: Define a "forma" dos dados de caminhão
- * 
- * ANALOGIA: É como um molde de bolo.
- * O molde define o formato, mas não é o bolo.
- * Os dados reais (caminhões) seguem esse formato.
- */
-
-// ============================================
-// CONSTANTES DE STATUS
-// ============================================
-
-/**
  * Lista de status possíveis para um caminhão
  * 
  * Copiado do backend (truck_models.js)
@@ -27,17 +13,7 @@ export const TRUCK_STATUS = {
   FINALIZADO: "FINALIZADO",
 } as const;
 
-// ============================================
-// TIPOS
-// ============================================
 
-/**
- * TruckStatus - Tipo que só aceita status válidos
- * 
- * EXEMPLO DE USO:
- * const status: TruckStatus = "AGUARDANDO";  // ✅ OK
- * const status: TruckStatus = "INVALIDO";    // ❌ ERRO
- */
 export type TruckStatus = (typeof TRUCK_STATUS)[keyof typeof TRUCK_STATUS];
 
 /**
