@@ -59,7 +59,7 @@ export function AddTruckDialog() {
               <SelectTrigger className="col-span-3">
                 <SelectValue placeholder="Selecione o status" />
               </SelectTrigger>
-              {/* Removi o Portal para garantir que o conteúdo do Select apareça sobre o Dialog */}
+              
                 <SelectContent>
                   <SelectItem value="AGUARDANDO">Aguardando</SelectItem>
                   <SelectItem value="NO_PATIO">No Pátio</SelectItem>
