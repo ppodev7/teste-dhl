@@ -4,7 +4,8 @@
 
 import { Truck, TruckInput } from "../types/truck";
 
-const API_URL = "http://localhost:3001/api";
+// Em produção usa a URL do Railway, em dev usa localhost
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
 
 
 export async function getTrucks(): Promise<Truck[]> {
