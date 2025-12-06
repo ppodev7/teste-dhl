@@ -1,11 +1,5 @@
 "use client";
 
-/**
- * InitialScreen - Tela inicial da aplicação
- * 
- * Design: Dark e minimalista
- * Ação: Redireciona para o Dashboard
- */
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -14,8 +8,7 @@ export function InitialScreen() {
   const router = useRouter();
 
   /**
-   * Navega para o dashboard
-   * Usando router.push para navegação client-side
+   * router.push para navegação client-side
    */
   const handleAccess = () => {
     router.push("/dashboard");
