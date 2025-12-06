@@ -16,6 +16,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -31,7 +38,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MoreHorizontal, Filter, X, Loader2 } from "lucide-react";
+import { MoreHorizontal, Filter, X, Loader2, MapPin, Building2, User, Package, Clock } from "lucide-react";
 import { AddTruckDialog } from "./addTruckDialog";
 import { TRUCK_STATUS, TruckStatus, Truck } from "./types/truck";
 import { getTrucks, deleteTruck } from "./api/truck-service";
@@ -60,6 +67,19 @@ const getStatusVariant = (status: TruckStatus): "default" | "secondary" | "destr
   return variants[status];
 };
 
+// Formata data para exibição
+const formatDate = (dateString: string | null | undefined): string => {
+  if (!dateString) return "—";
+  const date = new Date(dateString);
+  return date.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 export function Dashboard() {
   // Estados principais
   const [trucks, setTrucks] = useState<Truck[]>([]);
@@ -70,6 +90,9 @@ export function Dashboard() {
   // Estados para edição
   const [editingTruck, setEditingTruck] = useState<Truck | undefined>(undefined);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+  // Estado para "Ver Mais"
+  const [viewingTruck, setViewingTruck] = useState<Truck | null>(null);
 
   // Busca caminhões da API
   const fetchTrucks = async () => {
@@ -104,7 +127,7 @@ export function Dashboard() {
 
     try {
       await deleteTruck(truck._id);
-      fetchTrucks(); // Recarrega lista
+      fetchTrucks();
     } catch (err) {
       alert("Erro ao excluir caminhão");
       console.error(err);
@@ -253,6 +276,9 @@ export function Dashboard() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => setViewingTruck(truck)}>
+                                Ver Mais
+                              </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleEdit(truck)}>
                                 Editar
                               </DropdownMenuItem>
@@ -284,6 +310,94 @@ export function Dashboard() {
           onSuccess={handleSuccess}
         />
       )}
+
+      {/* Dialog "Ver Mais" - Detalhes do caminhão */}
+      <Dialog open={!!viewingTruck} onOpenChange={(open) => !open && setViewingTruck(null)}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <span className="font-mono">{viewingTruck?.placa}</span>
+              {viewingTruck && (
+                <Badge variant={getStatusVariant(viewingTruck.status)}>
+                  {formatStatus(viewingTruck.status)}
+                </Badge>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              Detalhes completos do caminhão
+            </DialogDescription>
+          </DialogHeader>
+
+          {viewingTruck && (
+            <div className="grid gap-4 py-4">
+              {/* Motorista e Empresa */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-start gap-2">
+                  <User className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Motorista</p>
+                    <p className="font-medium">{viewingTruck.motorista}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Building2 className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Empresa</p>
+                    <p className="font-medium">{viewingTruck.empresa}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Carga */}
+              <div className="flex items-start gap-2">
+                <Package className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Carga</p>
+                  <p className="font-medium">{viewingTruck.carga}</p>
+                </div>
+              </div>
+
+              {/* Origem */}
+              <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-lg">
+                <MapPin className="h-4 w-4 mt-0.5 text-green-600" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Origem</p>
+                  <p className="font-medium">{viewingTruck.origem.cidade}</p>
+                  <p className="text-sm text-muted-foreground">{viewingTruck.origem.endereco}</p>
+                </div>
+              </div>
+
+              {/* Destino */}
+              <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-lg">
+                <MapPin className="h-4 w-4 mt-0.5 text-red-600" />
+                <div>
+                  <p className="text-xs text-muted-foreground">Destino</p>
+                  <p className="font-medium">{viewingTruck.destino.cidade}</p>
+                  <p className="text-sm text-muted-foreground">{viewingTruck.destino.endereco}</p>
+                </div>
+              </div>
+
+              {/* Horários */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-start gap-2">
+                  <Clock className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Entrada</p>
+                    <p className="text-sm">{formatDate(viewingTruck.horarioEntrada)}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2">
+                  <Clock className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                  <div>
+                    <p className="text-xs text-muted-foreground">Saída</p>
+                    <p className="text-sm">{formatDate(viewingTruck.horarioSaida)}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
