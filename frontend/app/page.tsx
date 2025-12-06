@@ -1,14 +1,5 @@
-import { Dashboard } from "./_components/dashboard";
-import { Header } from "./_components/header";
+import { InitialScreen } from "./_components/initial_screen";
 
-
-  
 export default function Home() {
-  return(
-    <main>
-       <Header/>
-       <Dashboard/>
-    </main>
-  )
+  return <InitialScreen />;
 }
-
