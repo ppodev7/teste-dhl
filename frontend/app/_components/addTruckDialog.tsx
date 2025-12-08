@@ -120,6 +120,16 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
   }, [truckToEdit]);
 
   const handleChange = (field: string, value: string) => {
+    // Validação para campos de data - garante que o ano tenha 4 dígitos
+    if (field === "dataEntrada" || field === "dataSaida") {
+      if (value) {
+        const year = value.split("-")[0];
+        if (year && year.length !== 4) {
+          alert("O ano deve ter 4 dígitos (ex: 2024)");
+          return;
+        }
+      }
+    }
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -133,10 +143,31 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
       return;
     }
 
+    // Validação do ano - garante que tenha 4 dígitos
+    if (form.dataEntrada) {
+      const year = form.dataEntrada.split("-")[0];
+      if (year.length !== 4) {
+        alert("A data de entrada deve ter um ano com 4 dígitos (ex: 2024)");
+        return;
+      }
+    }
+
+    if (form.dataSaida) {
+      const year = form.dataSaida.split("-")[0];
+      if (year.length !== 4) {
+        alert("A data de saída deve ter um ano com 4 dígitos (ex: 2024)");
+        return;
+      }
+    }
+
     // Converte data e hora para Date
     let horarioEntrada: Date | undefined;
     if (form.dataEntrada && form.horaEntrada) {
       const [year, month, day] = form.dataEntrada.split("-");
+      if (year.length !== 4) {
+        alert("O ano deve ter 4 dígitos");
+        return;
+      }
       const [hour, minute] = form.horaEntrada.split(":");
       horarioEntrada = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute));
     } else {
@@ -147,6 +178,10 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
     let horarioSaida: Date | null = null;
     if (form.dataSaida && form.horaSaida) {
       const [year, month, day] = form.dataSaida.split("-");
+      if (year.length !== 4) {
+        alert("O ano deve ter 4 dígitos");
+        return;
+      }
       const [hour, minute] = form.horaSaida.split(":");
       horarioSaida = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute));
     }
@@ -299,8 +334,23 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
             <Input
               type="date"
               value={form.dataEntrada}
-              onChange={(e) => handleChange("dataEntrada", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Valida se o ano tem 4 dígitos
+                if (value) {
+                  const year = value.split("-")[0];
+                  if (year && year.length === 4) {
+                    handleChange("dataEntrada", value);
+                  } else if (year && year.length > 0) {
+                    alert("O ano deve ter exatamente 4 dígitos (ex: 2024)");
+                  }
+                } else {
+                  handleChange("dataEntrada", value);
+                }
+              }}
               disabled={saving}
+              min="1900-01-01"
+              max="9999-12-31"
             />
             <Input
               type="time"
@@ -317,9 +367,24 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
             <Input
               type="date"
               value={form.dataSaida}
-              onChange={(e) => handleChange("dataSaida", e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                // Valida se o ano tem 4 dígitos
+                if (value) {
+                  const year = value.split("-")[0];
+                  if (year && year.length === 4) {
+                    handleChange("dataSaida", value);
+                  } else if (year && year.length > 0) {
+                    alert("O ano deve ter exatamente 4 dígitos (ex: 2024)");
+                  }
+                } else {
+                  handleChange("dataSaida", value);
+                }
+              }}
               disabled={saving}
               placeholder="Opcional"
+              min="1900-01-01"
+              max="9999-12-31"
             />
             <Input
               type="time"
