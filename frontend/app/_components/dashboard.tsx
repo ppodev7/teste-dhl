@@ -67,7 +67,7 @@ const getStatusVariant = (status: TruckStatus): "default" | "secondary" | "destr
   return variants[status];
 };
 
-// Formata data para exibição
+// Formata data para exibição completa (usado no dialog "Ver Mais")
 const formatDate = (dateString: string | null | undefined): string => {
   if (!dateString) return "—";
   const date = new Date(dateString);
@@ -75,6 +75,18 @@ const formatDate = (dateString: string | null | undefined): string => {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+// Formata data e hora de forma compacta para a tabela
+const formatDateTimeCompact = (dateString: string | null | undefined): string => {
+  if (!dateString) return "—";
+  const date = new Date(dateString);
+  return date.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -240,6 +252,8 @@ export function Dashboard() {
                     <TableHead>Carga</TableHead>
                     <TableHead>Origem</TableHead>
                     <TableHead>Destino</TableHead>
+                    <TableHead>Entrada</TableHead>
+                    <TableHead>Saída</TableHead>
                     <TableHead>
                       <span className="sr-only">Ações</span>
                     </TableHead>
@@ -249,7 +263,7 @@ export function Dashboard() {
                 <TableBody>
                   {filteredTrucks.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="text-center text-muted-foreground py-8">
+                      <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
                         Nenhum caminhão encontrado.
                       </TableCell>
                     </TableRow>
@@ -267,6 +281,18 @@ export function Dashboard() {
                         <TableCell>{truck.carga}</TableCell>
                         <TableCell>{truck.origem.cidade}</TableCell>
                         <TableCell>{truck.destino.cidade}</TableCell>
+                        <TableCell className="text-sm whitespace-nowrap">
+                          <div className="flex items-center gap-1.5">
+                            <Clock className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                            <span className="text-xs">{formatDateTimeCompact(truck.horarioEntrada)}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-sm whitespace-nowrap">
+                          <div className="flex items-center gap-1.5">
+                            <Clock className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                            <span className="text-xs">{formatDateTimeCompact(truck.horarioSaida)}</span>
+                          </div>
+                        </TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
