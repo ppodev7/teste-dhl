@@ -294,7 +294,7 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
         </div>
 
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label className="text-right">Horário de Entrada</Label>
+          <Label className="text-right">Data/Horário de Entrada</Label>
           <div className="col-span-3 grid grid-cols-2 gap-2">
             <Input
               type="date"
@@ -312,7 +312,7 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
         </div>
 
         <div className="grid grid-cols-4 items-center gap-4">
-          <Label className="text-right">Horário de Saída</Label>
+          <Label className="text-right">Data/Horário de Saída</Label>
           <div className="col-span-3 grid grid-cols-2 gap-2">
             <Input
               type="date"
