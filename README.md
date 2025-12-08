@@ -35,7 +35,7 @@ Essa escolha se baseou na avaliação de que a ausência de um registro eletrôn
 
 ---
 
-Essa aplicação contém uso de IA: Gemini(VSCode), Claude Sonnet, Cursor (Para testes)
+Essa aplicação contém uso de IA: Gemini(VSCode), Claude Sonnet, Cursor (Para testes/Build com Docker)
 
 ## ⚙️ Como Executar a Aplicação
 
