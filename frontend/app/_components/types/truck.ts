@@ -56,6 +56,8 @@ export interface TruckInput {
   empresa: string;
   origem: TruckLocation;
   destino: TruckLocation;
+  horarioEntrada?: string; // ISO string da data/hora
+  horarioSaida?: string | null; // ISO string da data/hora ou null
   status?: TruckStatus;
 }
 
