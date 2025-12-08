@@ -39,7 +39,55 @@ Essa aplicação contém uso de IA: Gemini(VSCode), Claude Sonnet, Cursor (Para 
 
 ## ⚙️ Como Executar a Aplicação
 
-### Pré-requisitos
+### 🐳 Opção 1: Usando Docker Compose (Recomendado)
+
+A forma mais simples de executar o projeto é usando Docker Compose, que faz o build automático e inicia todos os serviços.
+
+#### Pré-requisitos
+- **Docker** e **Docker Compose** instalados - [Baixar aqui](https://www.docker.com/get-started)
+
+#### Passos:
+
+1. **Clone o repositório**
+```bash
+git clone <seu-repositorio>
+cd teste-dhl
+```
+
+2. **Build e inicie todos os serviços**
+```bash
+docker-compose up --build
+```
+
+Isso irá:
+- ✅ Fazer build automático do backend e frontend
+- ✅ Iniciar MongoDB (porta 27017)
+- ✅ Iniciar Backend (porta 3001)
+- ✅ Iniciar Frontend (porta 3000)
+
+3. **Acesse a aplicação**
+👉 **http://localhost:3000**
+
+#### Comandos úteis:
+```bash
+# Executar em background
+docker-compose up --build -d
+
+# Ver logs
+docker-compose logs -f
+
+# Parar serviços
+docker-compose down
+
+# Parar e limpar volumes
+docker-compose down -v
+```
+
+---
+
+### 💻 Opção 2: Execução Manual
+
+#### Pré-requisitos
 
 Antes de começar, você precisa ter instalado:
 
@@ -52,18 +100,14 @@ Antes de começar, você precisa ter instalado:
 > mongod --version
 > ```
 
----
-
-### Passo 1: Clone o repositório
+#### Passo 1: Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/zyx-logistica.git
-cd zyx-logistica
+git clone <seu-repositorio>
+cd teste-dhl
 ```
 
----
-
-### Passo 2: Inicie o MongoDB
+#### Passo 2: Inicie o MongoDB
 
 Abra um terminal e rode:
 
@@ -73,9 +117,7 @@ mongod
 
 > Deixe este terminal aberto. O MongoDB precisa estar rodando.
 
----
-
-### Passo 3: Inicie o Backend
+#### Passo 3: Inicie o Backend
 
 Abra **outro terminal** e rode:
 
@@ -89,9 +131,7 @@ Você verá: `Servidor rodando na porta 3001` e `MongoDB rodando com sucesso!`
 
 > Deixe este terminal aberto também.
 
----
-
-### Passo 4: Inicie o Frontend
+#### Passo 4: Inicie o Frontend
 
 Abra **outro terminal** e rode:
 
@@ -103,9 +143,7 @@ npm run dev
 
 Você verá: `Ready in Xms`
 
----
-
-### Passo 5: Acesse a aplicação
+#### Passo 5: Acesse a aplicação
 
 Abra o navegador e acesse:
 
@@ -131,6 +169,7 @@ Abra o navegador e acesse:
 - [x] Visualização detalhada (Ver Mais)
 - [x] Edição de registros
 - [x] Exclusão de registros
+- [x] Controle de horário de entrada e saída
 - [x] Interface responsiva
 - [x] Tema dark
 
@@ -139,7 +178,7 @@ Abra o navegador e acesse:
 ## 📁 Estrutura
 
 ```
-zyx-logistica/
+teste-dhl/
 ├── backend/           # API REST (Express + MongoDB)
 │   └── src/
 │       ├── controllers/
@@ -161,10 +200,12 @@ zyx-logistica/
 
 | Problema | Solução |
 |----------|---------|
-| `mongod: command not found` | MongoDB não está instalado ou não está no PATH |
-| `ECONNREFUSED` no frontend | Backend não está rodando. Inicie com `npm run dev` |
-| `MongoDB connection error` | MongoDB não está rodando. Inicie com `mongod` |
-| Porta 3000 em uso | Outra aplicação está usando. Feche-a ou mude a porta |
+| `mongod: command not found` | MongoDB não está instalado ou não está no PATH. Use Docker Compose como alternativa |
+| `ECONNREFUSED` no frontend | Backend não está rodando. Verifique com `docker-compose ps` ou inicie manualmente |
+| `MongoDB connection error` | MongoDB não está rodando. Use Docker Compose ou inicie com `mongod` |
+| Porta 3000 em uso | Outra aplicação está usando. Feche-a ou mude a porta no `docker-compose.yml` |
+| Erro ao executar `npm` no PowerShell | Use `npm.cmd` ou altere a política de execução do PowerShell |
+| Docker build falha | Verifique se Docker está rodando e se há espaço em disco suficiente |
 
 ---
 

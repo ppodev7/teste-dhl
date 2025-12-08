@@ -57,6 +57,10 @@ const emptyForm = {
   origemEndereco: "",
   destinoCidade: "",
   destinoEndereco: "",
+  dataEntrada: "",
+  horaEntrada: "",
+  dataSaida: "",
+  horaSaida: "",
   status: TRUCK_STATUS.AGUARDANDO as TruckStatus,
 };
 
@@ -70,6 +74,22 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
 
   const isEditMode = !!truckToEdit;
 
+  // Função auxiliar para converter Date para string de data (YYYY-MM-DD)
+  const dateToString = (date: Date | string | null | undefined): string => {
+    if (!date) return "";
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "";
+    return d.toISOString().split("T")[0];
+  };
+
+  // Função auxiliar para converter Date para string de hora (HH:mm)
+  const timeToString = (date: Date | string | null | undefined): string => {
+    if (!date) return "";
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return "";
+    return d.toTimeString().slice(0, 5);
+  };
+
   // Preenche form quando editar
   useEffect(() => {
     if (truckToEdit) {
@@ -82,15 +102,48 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
         origemEndereco: truckToEdit.origem.endereco,
         destinoCidade: truckToEdit.destino.cidade,
         destinoEndereco: truckToEdit.destino.endereco,
+        dataEntrada: dateToString(truckToEdit.horarioEntrada),
+        horaEntrada: timeToString(truckToEdit.horarioEntrada),
+        dataSaida: dateToString(truckToEdit.horarioSaida),
+        horaSaida: timeToString(truckToEdit.horarioSaida),
         status: truckToEdit.status,
       });
     } else {
-      setForm(emptyForm);
+      // Define data e hora atual como padrão para novo caminhão
+      const now = new Date();
+      setForm({
+        ...emptyForm,
+        dataEntrada: dateToString(now),
+        horaEntrada: timeToString(now),
+      });
     }
   }, [truckToEdit]);
 
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Função para validar data no formato YYYY-MM-DD com ano de 4 dígitos
+  const handleDateChange = (field: "dataEntrada" | "dataSaida", value: string) => {
+    if (!value) {
+      handleChange(field, "");
+      return;
+    }
+
+    // Verifica se o formato está correto e o ano tem 4 dígitos
+    const datePattern = /^(\d{4})-(\d{2})-(\d{2})$/;
+    const match = value.match(datePattern);
+    
+    if (match) {
+      const year = match[1];
+      // Só aceita se o ano tiver exatamente 4 dígitos
+      if (year.length === 4) {
+        handleChange(field, value);
+      }
+    } else {
+      // Se não está no formato correto, não atualiza
+      return;
+    }
   };
 
   const resetForm = () => {
@@ -103,7 +156,50 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
       return;
     }
 
-    const truckData = {
+    // Validação do ano - garante que tenha 4 dígitos
+    if (form.dataEntrada) {
+      const year = form.dataEntrada.split("-")[0];
+      if (year.length !== 4) {
+        alert("A data de entrada deve ter um ano com 4 dígitos (ex: 2024)");
+        return;
+      }
+    }
+
+    if (form.dataSaida) {
+      const year = form.dataSaida.split("-")[0];
+      if (year.length !== 4) {
+        alert("A data de saída deve ter um ano com 4 dígitos (ex: 2024)");
+        return;
+      }
+    }
+
+    // Converte data e hora para Date
+    let horarioEntrada: Date | undefined;
+    if (form.dataEntrada && form.horaEntrada) {
+      const [year, month, day] = form.dataEntrada.split("-");
+      if (year.length !== 4) {
+        alert("O ano deve ter 4 dígitos");
+        return;
+      }
+      const [hour, minute] = form.horaEntrada.split(":");
+      horarioEntrada = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute));
+    } else {
+      // Se não preenchido, usa data/hora atual
+      horarioEntrada = new Date();
+    }
+
+    let horarioSaida: Date | null = null;
+    if (form.dataSaida && form.horaSaida) {
+      const [year, month, day] = form.dataSaida.split("-");
+      if (year.length !== 4) {
+        alert("O ano deve ter 4 dígitos");
+        return;
+      }
+      const [hour, minute] = form.horaSaida.split(":");
+      horarioSaida = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(hour), parseInt(minute));
+    }
+
+    const truckData: any = {
       empresa: form.empresa,
       motorista: form.motorista,
       placa: form.placa,
@@ -117,7 +213,15 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
         endereco: form.destinoEndereco,
       },
       status: form.status,
+      horarioEntrada: horarioEntrada.toISOString(),
     };
+
+    // Adiciona horário de saída apenas se foi preenchido
+    if (horarioSaida) {
+      truckData.horarioSaida = horarioSaida.toISOString();
+    } else {
+      truckData.horarioSaida = null;
+    }
 
     try {
       setSaving(true);
@@ -233,6 +337,89 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
               onChange={(e) => handleChange("destinoEndereco", e.target.value)}
               placeholder="Endereço"
               disabled={saving}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-right">Data/Horário de Entrada</Label>
+          <div className="col-span-3 grid grid-cols-2 gap-2">
+            <Input
+              type="date"
+              value={form.dataEntrada}
+              onChange={(e) => {
+                const value = e.target.value;
+                handleDateChange("dataEntrada", value);
+              }}
+              onKeyDown={(e) => {
+                // Previne digitação manual que possa resultar em ano inválido
+                // O input type="date" já controla isso, mas garantimos validação
+                if (e.key === "Backspace" || e.key === "Delete" || e.key === "Tab") {
+                  return;
+                }
+              }}
+              onBlur={(e) => {
+                // Valida ao sair do campo
+                const value = e.target.value;
+                if (value) {
+                  const year = value.split("-")[0];
+                  if (year && year.length !== 4) {
+                    alert("O ano deve ter exatamente 4 dígitos (ex: 2024)");
+                    e.target.focus();
+                  }
+                }
+              }}
+              disabled={saving}
+              min="1900-01-01"
+              max="9999-12-31"
+            />
+            <Input
+              type="time"
+              value={form.horaEntrada}
+              onChange={(e) => handleChange("horaEntrada", e.target.value)}
+              disabled={saving}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-right">Data/Horário de Saída</Label>
+          <div className="col-span-3 grid grid-cols-2 gap-2">
+            <Input
+              type="date"
+              value={form.dataSaida}
+              onChange={(e) => {
+                const value = e.target.value;
+                handleDateChange("dataSaida", value);
+              }}
+              onKeyDown={(e) => {
+                // Previne digitação manual que possa resultar em ano inválido
+                if (e.key === "Backspace" || e.key === "Delete" || e.key === "Tab") {
+                  return;
+                }
+              }}
+              onBlur={(e) => {
+                // Valida ao sair do campo
+                const value = e.target.value;
+                if (value) {
+                  const year = value.split("-")[0];
+                  if (year && year.length !== 4) {
+                    alert("O ano deve ter exatamente 4 dígitos (ex: 2024)");
+                    e.target.focus();
+                  }
+                }
+              }}
+              disabled={saving}
+              placeholder="Opcional"
+              min="1900-01-01"
+              max="9999-12-31"
+            />
+            <Input
+              type="time"
+              value={form.horaSaida}
+              onChange={(e) => handleChange("horaSaida", e.target.value)}
+              disabled={saving}
+              placeholder="Opcional"
             />
           </div>
         </div>
