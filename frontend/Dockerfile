@@ -13,6 +13,11 @@ COPY . .
 # Expõe a porta
 EXPOSE 3000
 
-# Comando para iniciar em modo dev
+# Variáveis de ambiente para Next.js
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME=0.0.0.0
+
+# Comando para iniciar em modo dev (hot reload)
 CMD ["npm", "run", "dev"]
 
