@@ -120,17 +120,30 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
   }, [truckToEdit]);
 
   const handleChange = (field: string, value: string) => {
-    // Validação para campos de data - garante que o ano tenha 4 dígitos
-    if (field === "dataEntrada" || field === "dataSaida") {
-      if (value) {
-        const year = value.split("-")[0];
-        if (year && year.length !== 4) {
-          alert("O ano deve ter 4 dígitos (ex: 2024)");
-          return;
-        }
-      }
-    }
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Função para validar data no formato YYYY-MM-DD com ano de 4 dígitos
+  const handleDateChange = (field: "dataEntrada" | "dataSaida", value: string) => {
+    if (!value) {
+      handleChange(field, "");
+      return;
+    }
+
+    // Verifica se o formato está correto e o ano tem 4 dígitos
+    const datePattern = /^(\d{4})-(\d{2})-(\d{2})$/;
+    const match = value.match(datePattern);
+    
+    if (match) {
+      const year = match[1];
+      // Só aceita se o ano tiver exatamente 4 dígitos
+      if (year.length === 4) {
+        handleChange(field, value);
+      }
+    } else {
+      // Se não está no formato correto, não atualiza
+      return;
+    }
   };
 
   const resetForm = () => {
@@ -336,16 +349,24 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
               value={form.dataEntrada}
               onChange={(e) => {
                 const value = e.target.value;
-                // Valida se o ano tem 4 dígitos
+                handleDateChange("dataEntrada", value);
+              }}
+              onKeyDown={(e) => {
+                // Previne digitação manual que possa resultar em ano inválido
+                // O input type="date" já controla isso, mas garantimos validação
+                if (e.key === "Backspace" || e.key === "Delete" || e.key === "Tab") {
+                  return;
+                }
+              }}
+              onBlur={(e) => {
+                // Valida ao sair do campo
+                const value = e.target.value;
                 if (value) {
                   const year = value.split("-")[0];
-                  if (year && year.length === 4) {
-                    handleChange("dataEntrada", value);
-                  } else if (year && year.length > 0) {
+                  if (year && year.length !== 4) {
                     alert("O ano deve ter exatamente 4 dígitos (ex: 2024)");
+                    e.target.focus();
                   }
-                } else {
-                  handleChange("dataEntrada", value);
                 }
               }}
               disabled={saving}
@@ -369,16 +390,23 @@ export function AddTruckDialog({ onSuccess, truckToEdit, open: externalOpen, onO
               value={form.dataSaida}
               onChange={(e) => {
                 const value = e.target.value;
-                // Valida se o ano tem 4 dígitos
+                handleDateChange("dataSaida", value);
+              }}
+              onKeyDown={(e) => {
+                // Previne digitação manual que possa resultar em ano inválido
+                if (e.key === "Backspace" || e.key === "Delete" || e.key === "Tab") {
+                  return;
+                }
+              }}
+              onBlur={(e) => {
+                // Valida ao sair do campo
+                const value = e.target.value;
                 if (value) {
                   const year = value.split("-")[0];
-                  if (year && year.length === 4) {
-                    handleChange("dataSaida", value);
-                  } else if (year && year.length > 0) {
+                  if (year && year.length !== 4) {
                     alert("O ano deve ter exatamente 4 dígitos (ex: 2024)");
+                    e.target.focus();
                   }
-                } else {
-                  handleChange("dataSaida", value);
                 }
               }}
               disabled={saving}
